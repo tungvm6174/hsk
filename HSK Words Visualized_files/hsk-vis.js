@@ -20,10 +20,10 @@ $(document).ready(function(){
         for (var i = 0; i < characters.length; i++) {
             var character = characters[i];
             if (uniqueCharacters.includes(character)) {
-                returnHtml = returnHtml + "&#8203;" + character;
+                returnHtml = returnHtml + character;
             } else {
                 uniqueCharacters.push(character);
-                returnHtml = returnHtml + "&#8203;" + '<span class="unique">' + character + '</span>';
+                returnHtml = returnHtml + '<span class="unique">' + character + '</span>';
             }
         }
         return returnHtml;
@@ -49,18 +49,17 @@ $(document).ready(function(){
     }
 
     function populateHSK(type) {
-        var file = 'data/hsk-words.json';
+        var data = HSK_DATA_SIMPLIFIED;
         if (type == 'traditional') {
-          file = 'data/hsk-words-trad.json';
+          data = HSK_DATA_TRADITIONAL;
         }
-        $.ajax(file).done(function(data){
-            addWordsToRegion({x:1, y:1}, {x:25, y:6}, data.hsk1, 'hsk1');
-            addWordsToRegion({x:1, y:7}, {x:25, y:12}, data.hsk2, 'hsk2');
-            addWordsToRegion({x:1, y:13}, {x:25, y:24}, data.hsk3, 'hsk3');
-            addWordsToRegion({x:26, y:1}, {x:50, y:24}, data.hsk4, 'hsk4');
-            addWordsToRegion({x:1, y:25}, {x:50, y:50}, data.hsk5, 'hsk5');
-            addWordsToRegion({x:51, y:1}, {x:100, y:50}, data.hsk6, 'hsk6');
-        });
+        
+        addWordsToRegion({x:1, y:1}, {x:25, y:6}, data.hsk1, 'hsk1');
+        addWordsToRegion({x:1, y:7}, {x:25, y:12}, data.hsk2, 'hsk2');
+        addWordsToRegion({x:1, y:13}, {x:25, y:24}, data.hsk3, 'hsk3');
+        addWordsToRegion({x:26, y:1}, {x:50, y:24}, data.hsk4, 'hsk4');
+        addWordsToRegion({x:1, y:25}, {x:50, y:50}, data.hsk5, 'hsk5');
+        addWordsToRegion({x:51, y:1}, {x:100, y:50}, data.hsk6, 'hsk6');
     }
 
     function addClassToCell(x, y, cls) {
