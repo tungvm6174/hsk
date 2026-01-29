@@ -1,6 +1,22 @@
+@font-face {
+  font-family: 'FangZhengPinyinWeb';
+  src: url('./FangZhengKaiTiPinYinZiKu.ttc');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'OzCaramelWeb';
+  src: url('./OzCaramel Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 body {
   margin: 0;
 }
+
+
 
 .vis-table {
   border-collapse: collapse;
@@ -23,7 +39,7 @@ body {
 }
 
 .ozcaramel-font .vis-table-cell {
-  font-family: "OzCaramel", "Kaiti SC", "Kaiti TC", "STKaiti", "KaiTi", serif;
+  font-family: 'OzCaramelWeb', "OzCaramel", "Kaiti SC", "Kaiti TC", "STKaiti", "KaiTi", serif;
 }
 
 .lingwai-font .vis-table-cell {
@@ -31,7 +47,7 @@ body {
 }
 
 .pinyin-font .vis-table-cell {
-  font-family: "FZKTPY01--GB1-0", "FZKTPY02--GB1-0", "FZKTPY03--GB1-0", "FZKTPY04--GB1-0", "FZKTPY05--GB1-0", "FZKTPY06--GB1-0", "FangZhengKaiTiPinYinZiKu", "FZKaiTiPinYinZiKu", "FZKTPY", "方正楷体拼音字库", "Kaiti SC", "Kaiti TC", serif;
+  font-family: 'FangZhengPinyinWeb', "FZKTPY01--GB1-0", "FZKTPY02--GB1-0", "FZKTPY03--GB1-0", "FZKTPY04--GB1-0", "FZKTPY05--GB1-0", "FZKTPY06--GB1-0", "FangZhengKaiTiPinYinZiKu", "FZKaiTiPinYinZiKu", "FZKTPY", "方正楷体拼音字库", "Kaiti SC", "Kaiti TC", serif;
   line-height: 1.8;
 }
 
