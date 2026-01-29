@@ -125,17 +125,21 @@ $(document).ready(function () {
         var currentFont = $(this).attr('data-current-font');
 
         // Remove all font classes
-        $('.vis').removeClass('kaiti-font xingshu-font');
+        $('.vis').removeClass('kaiti-font ozcaramel-font lingwai-font');
 
-        // Cycle through fonts: sans-serif -> kaiti -> xingshu -> sans-serif
+        // Cycle through fonts: sans-serif -> kaiti -> ozcaramel -> lingwai -> sans-serif
         if (currentFont == 'sans-serif') {
             $(this).attr('data-current-font', 'kaiti');
             $(this).text('Toggle Font: Kaiti');
             $('.vis').addClass('kaiti-font');
         } else if (currentFont == 'kaiti') {
-            $(this).attr('data-current-font', 'xingshu');
-            $(this).text('Toggle Font: Xingshu (OzCaramel)');
-            $('.vis').addClass('xingshu-font');
+            $(this).attr('data-current-font', 'ozcaramel');
+            $(this).text('Toggle Font: OzCaramel');
+            $('.vis').addClass('ozcaramel-font');
+        } else if (currentFont == 'ozcaramel') {
+            $(this).attr('data-current-font', 'lingwai');
+            $(this).text('Toggle Font: LingWai');
+            $('.vis').addClass('lingwai-font');
         } else {
             $(this).attr('data-current-font', 'sans-serif');
             $(this).text('Toggle Font: Sans-serif');

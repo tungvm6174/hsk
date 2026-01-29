@@ -22,9 +22,14 @@ body {
   font-family: "Kaiti SC", "Kaiti TC", "STKaiti", "KaiTi", serif;
 }
 
-.xingshu-font .vis-table-cell {
+.ozcaramel-font .vis-table-cell {
   font-family: "OzCaramel", "Kaiti SC", "Kaiti TC", "STKaiti", "KaiTi", serif;
 }
+
+.lingwai-font .vis-table-cell {
+  font-family: "LingWai SC", "LingWai TC", "Kaiti SC", "Kaiti TC", serif;
+}
+
 
 .hsk1 {
   background: #F8B51E;
