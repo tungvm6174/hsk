@@ -30,17 +30,6 @@ body {
   font-family: "LingWai SC", "LingWai TC", "Kaiti SC", "Kaiti TC", serif;
 }
 
-.songti-font .vis-table-cell {
-  font-family: "Songti SC", "Songti TC", "STSong", "SimSun", serif;
-}
-
-.stkaiti-font .vis-table-cell {
-  font-family: "STKaiti", "Kaiti SC", "Kaiti TC", "KaiTi", serif;
-}
-
-.xingkai-font .vis-table-cell {
-  font-family: "Xingkai SC", "STXingkai", "Kaiti SC", "Kaiti TC", serif;
-}
 
 .hsk1 {
   background: #F8B51E;
