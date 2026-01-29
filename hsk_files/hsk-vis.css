@@ -30,6 +30,10 @@ body {
   font-family: "LingWai SC", "LingWai TC", "Kaiti SC", "Kaiti TC", serif;
 }
 
+.pinyin-font .vis-table-cell {
+  font-family: "FZKTPY01--GB1-0", "FZKTPY02--GB1-0", "FZKTPY03--GB1-0", "FZKTPY04--GB1-0", "FZKTPY05--GB1-0", "FZKTPY06--GB1-0", "FangZhengKaiTiPinYinZiKu", "FZKaiTiPinYinZiKu", "FZKTPY", "方正楷体拼音字库", "Kaiti SC", "Kaiti TC", serif;
+  line-height: 1.8;
+}
 
 .hsk1 {
   background: #F8B51E;
