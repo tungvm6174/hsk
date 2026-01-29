@@ -125,9 +125,9 @@ $(document).ready(function () {
         var currentFont = $(this).attr('data-current-font');
 
         // Remove all font classes
-        $('.vis').removeClass('kaiti-font ozcaramel-font lingwai-font');
+        $('.vis').removeClass('kaiti-font ozcaramel-font lingwai-font songti-font stkaiti-font xingkai-font');
 
-        // Cycle through fonts: sans-serif -> kaiti -> ozcaramel -> lingwai -> sans-serif
+        // Cycle through fonts: sans-serif -> kaiti -> ozcaramel -> lingwai -> songti -> stkaiti -> xingkai -> sans-serif
         if (currentFont == 'sans-serif') {
             $(this).attr('data-current-font', 'kaiti');
             $(this).text('Toggle Font: Kaiti');
@@ -140,6 +140,18 @@ $(document).ready(function () {
             $(this).attr('data-current-font', 'lingwai');
             $(this).text('Toggle Font: LingWai');
             $('.vis').addClass('lingwai-font');
+        } else if (currentFont == 'lingwai') {
+            $(this).attr('data-current-font', 'songti');
+            $(this).text('Toggle Font: Songti');
+            $('.vis').addClass('songti-font');
+        } else if (currentFont == 'songti') {
+            $(this).attr('data-current-font', 'stkaiti');
+            $(this).text('Toggle Font: STKaiti');
+            $('.vis').addClass('stkaiti-font');
+        } else if (currentFont == 'stkaiti') {
+            $(this).attr('data-current-font', 'xingkai');
+            $(this).text('Toggle Font: Xingkai');
+            $('.vis').addClass('xingkai-font');
         } else {
             $(this).attr('data-current-font', 'sans-serif');
             $(this).text('Toggle Font: Sans-serif');
