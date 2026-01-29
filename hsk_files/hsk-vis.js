@@ -122,12 +122,23 @@ $(document).ready(function () {
     })
 
     $('.font-toggle').click(function () {
-        if ($(this).attr('data-current-font') == 'kaiti') {
-            $(this).attr('data-current-font', 'sans-serif');
-            $('.vis').addClass('sans-serif-font');
-        } else {
+        var currentFont = $(this).attr('data-current-font');
+
+        // Remove all font classes
+        $('.vis').removeClass('kaiti-font xingshu-font');
+
+        // Cycle through fonts: sans-serif -> kaiti -> xingshu -> sans-serif
+        if (currentFont == 'sans-serif') {
             $(this).attr('data-current-font', 'kaiti');
-            $('.vis').removeClass('sans-serif-font');
+            $(this).text('Toggle Font: Kaiti');
+            $('.vis').addClass('kaiti-font');
+        } else if (currentFont == 'kaiti') {
+            $(this).attr('data-current-font', 'xingshu');
+            $(this).text('Toggle Font: Xingshu (OzCaramel)');
+            $('.vis').addClass('xingshu-font');
+        } else {
+            $(this).attr('data-current-font', 'sans-serif');
+            $(this).text('Toggle Font: Sans-serif');
         }
     })
 });

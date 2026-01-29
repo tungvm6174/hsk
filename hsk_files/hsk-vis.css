@@ -10,7 +10,7 @@ body {
 .vis-table-cell {
   width: 3rem;
   height: 3rem;
-  font-family: "Kaiti SC", "Kaiti TC", "STKaiti", "KaiTi", serif;
+  font-family: sans-serif;
   font-weight: bold;
   font-size: 1em;
   vertical-align: middle;
@@ -18,8 +18,12 @@ body {
   color: rgba(255, 255, 255, 0.7);
 }
 
-.sans-serif-font .vis-table-cell {
-  font-family: sans-serif;
+.kaiti-font .vis-table-cell {
+  font-family: "Kaiti SC", "Kaiti TC", "STKaiti", "KaiTi", serif;
+}
+
+.xingshu-font .vis-table-cell {
+  font-family: "OzCaramel", "Kaiti SC", "Kaiti TC", "STKaiti", "KaiTi", serif;
 }
 
 .hsk1 {
