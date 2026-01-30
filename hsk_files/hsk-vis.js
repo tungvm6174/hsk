@@ -154,23 +154,44 @@ $(document).ready(function () {
     })
 
     // Draggable controls logic
+    function getViewportSize() {
+        if (window.visualViewport) {
+            return {
+                width: window.visualViewport.width,
+                height: window.visualViewport.height,
+                offsetLeft: window.visualViewport.offsetLeft,
+                offsetTop: window.visualViewport.offsetTop
+            };
+        }
+        return {
+            width: window.innerWidth,
+            height: window.innerHeight,
+            offsetLeft: 0,
+            offsetTop: 0
+        };
+    }
+
     function constrainToViewport() {
         var $controls = $('.controls-container');
         var rect = $controls[0].getBoundingClientRect();
-        var winWidth = window.innerWidth;
-        var winHeight = window.innerHeight;
+        var vp = getViewportSize();
+
+        // rect is relative to the visual viewport when position: fixed (mostly)
+        // But getBoundingClientRect returns coordinates relative to the viewport.
+
         var newLeft = rect.left;
         var newTop = rect.top;
         var width = rect.width;
         var height = rect.height;
 
         // Constrain horizontally
+        // We want it within [0, vp.width] of the visual viewport
         if (newLeft < 0) newLeft = 0;
-        else if (newLeft + width > winWidth) newLeft = winWidth - width;
+        else if (newLeft + width > vp.width) newLeft = vp.width - width;
 
         // Constrain vertically
         if (newTop < 0) newTop = 0;
-        else if (newTop + height > winHeight) newTop = winHeight - height;
+        else if (newTop + height > vp.height) newTop = vp.height - height;
 
         $controls.css({
             left: newLeft + 'px',
@@ -239,12 +260,11 @@ $(document).ready(function () {
         var newTop = initialTop + dy;
 
         var rect = $controls[0].getBoundingClientRect();
-        var winWidth = window.innerWidth;
-        var winHeight = window.innerHeight;
+        var vp = getViewportSize();
 
         // Constrain
-        newLeft = Math.max(0, Math.min(newLeft, winWidth - rect.width));
-        newTop = Math.max(0, Math.min(newTop, winHeight - rect.height));
+        newLeft = Math.max(0, Math.min(newLeft, vp.width - rect.width));
+        newTop = Math.max(0, Math.min(newTop, vp.height - rect.height));
 
         $controls.css({
             left: newLeft + 'px',
@@ -263,4 +283,14 @@ $(document).ready(function () {
     $(window).resize(function () {
         constrainToViewport();
     });
+
+    // Also listen to visualViewport resize if available
+    if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', constrainToViewport);
+        // We might not want to constrain on scroll per se unless we want it stuck relative to visual viewport
+        // position: fixed usually handles stickiness, but if we pinch-zoom, the fixed element moves.
+        // If we want to force it to stay visible, we would need to adjust it on scroll too, 
+        // but that fights with position: fixed native behavior. 
+        // For now, resize is the main thing changing bounds.
+    }
 });
