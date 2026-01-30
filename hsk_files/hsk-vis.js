@@ -154,6 +154,10 @@ $(document).ready(function () {
     })
 
     // Draggable controls logic
+    // State-based positioning
+    var lastVisualLeft = 10;
+    var lastVisualTop = 10;
+
     function getViewportSize() {
         if (window.visualViewport) {
             return {
@@ -171,58 +175,62 @@ $(document).ready(function () {
         };
     }
 
-    function constrainToViewport() {
+    function updatePosition(left, top) {
+        // Update source of truth
+        lastVisualLeft = left;
+        lastVisualTop = top;
+
         var $controls = $('.controls-container');
-        var rect = $controls[0].getBoundingClientRect();
         var vp = getViewportSize();
 
-        // rect is relative to the visual viewport when position: fixed (mostly)
-        // But getBoundingClientRect returns coordinates relative to the viewport.
-
-        var newLeft = rect.left;
-        var newTop = rect.top;
-        var width = rect.width;
-        var height = rect.height;
-
-        // Constrain horizontally
-        // We want it within [0, vp.width] of the visual viewport
-        if (newLeft < 0) newLeft = 0;
-        else if (newLeft + width > vp.width) newLeft = vp.width - width;
-
-        // Constrain vertically
-        if (newTop < 0) newTop = 0;
-        else if (newTop + height > vp.height) newTop = vp.height - height;
+        var cssLeft = left + vp.offsetLeft;
+        var cssTop = top + vp.offsetTop;
 
         $controls.css({
-            left: newLeft + 'px',
-            top: newTop + 'px'
+            left: cssLeft + 'px',
+            top: cssTop + 'px',
+            right: 'auto',
+            bottom: 'auto'
         });
     }
 
-    var $controls = $('.controls-container');
+    // Function to keep the controls relative to the viewport, respecting the last drag position
+    function refreshPosition() {
+        if (isDragging) return;
+
+        var vp = getViewportSize();
+        var $controls = $('.controls-container');
+        var rect = $controls[0].getBoundingClientRect();
+
+        // Clamp the last known visual position to the new viewport dimensions
+        // This prevents effective "loss" of the controls if the viewport shrinks
+        var validLeft = Math.max(0, Math.min(lastVisualLeft, vp.width - rect.width));
+        var validTop = Math.max(0, Math.min(lastVisualTop, vp.height - rect.height));
+
+        updatePosition(validLeft, validTop);
+    }
+
+    // Initialize
+    refreshPosition();
+
+    // Draggable logic
     var isDragging = false;
-    var startX, startY, initialLeft, initialTop;
+    var startX, startY;
+    var startDragVisualLeft, startDragVisualTop;
 
     function startDrag(clientX, clientY) {
         isDragging = true;
         startX = clientX;
         startY = clientY;
 
-        var rect = $controls[0].getBoundingClientRect();
-        initialLeft = rect.left;
-        initialTop = rect.top;
+        // Use our state as the starting point
+        startDragVisualLeft = lastVisualLeft;
+        startDragVisualTop = lastVisualTop;
 
-        $controls.addClass('dragging');
-        $controls.css({
-            'right': 'auto',
-            'left': initialLeft + 'px',
-            'top': initialTop + 'px',
-            'bottom': 'auto'
-        });
+        $('.controls-container').addClass('dragging');
     }
 
-    $controls.on('mousedown touchstart', function (e) {
-        // Only allow dragging via the handle
+    $('.controls-container').on('mousedown touchstart', function (e) {
         if (!$(e.target).closest('.drag-handle').length) {
             return;
         }
@@ -236,8 +244,6 @@ $(document).ready(function () {
         }
 
         startDrag(clientX, clientY);
-
-        // Prevent default to disable text selection etc.
         e.preventDefault();
     });
 
@@ -250,47 +256,73 @@ $(document).ready(function () {
         if (e.type === 'touchmove') {
             clientX = e.originalEvent.touches[0].clientX;
             clientY = e.originalEvent.touches[0].clientY;
-            e.preventDefault(); // Prevent scrolling while dragging
+            e.preventDefault();
         }
 
         var dx = clientX - startX;
         var dy = clientY - startY;
 
-        var newLeft = initialLeft + dx;
-        var newTop = initialTop + dy;
+        var newVisualLeft = startDragVisualLeft + dx;
+        var newVisualTop = startDragVisualTop + dy;
 
-        var rect = $controls[0].getBoundingClientRect();
         var vp = getViewportSize();
+        var rect = $('.controls-container')[0].getBoundingClientRect();
 
-        // Constrain
-        newLeft = Math.max(0, Math.min(newLeft, vp.width - rect.width));
-        newTop = Math.max(0, Math.min(newTop, vp.height - rect.height));
+        newVisualLeft = Math.max(0, Math.min(newVisualLeft, vp.width - rect.width));
+        newVisualTop = Math.max(0, Math.min(newVisualTop, vp.height - rect.height));
 
-        $controls.css({
-            left: newLeft + 'px',
-            top: newTop + 'px'
-        });
+        updatePosition(newVisualLeft, newVisualTop);
     });
 
     $(document).on('mouseup touchend', function () {
         if (isDragging) {
             isDragging = false;
-            $controls.removeClass('dragging');
-            constrainToViewport();
+            $('.controls-container').removeClass('dragging');
         }
     });
 
-    $(window).resize(function () {
-        constrainToViewport();
+    $(window).resize(refreshPosition);
+    $(window).scroll(refreshPosition);
+    $(window).on('orientationchange', refreshPosition);
+
+    if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', refreshPosition);
+        window.visualViewport.addEventListener('scroll', refreshPosition);
+    }
+
+    // Toggle controls visibility on middle click (Desktop)
+    $(document).on('mousedown', function (e) {
+        if (e.which === 2) {
+            e.preventDefault();
+            toggleControls();
+        }
     });
 
-    // Also listen to visualViewport resize if available
-    if (window.visualViewport) {
-        window.visualViewport.addEventListener('resize', constrainToViewport);
-        // We might not want to constrain on scroll per se unless we want it stuck relative to visual viewport
-        // position: fixed usually handles stickiness, but if we pinch-zoom, the fixed element moves.
-        // If we want to force it to stay visible, we would need to adjust it on scroll too, 
-        // but that fights with position: fixed native behavior. 
-        // For now, resize is the main thing changing bounds.
+    // Toggle controls visibility on Long Press (Mobile)
+    var longPressTimer;
+    $(document).on('touchstart', function (e) {
+        longPressTimer = setTimeout(function () {
+            toggleControls();
+        }, 800);
+    });
+
+    $(document).on('touchend touchmove', function (e) {
+        clearTimeout(longPressTimer);
+    });
+
+    function toggleControls() {
+        var $controls = $('.controls-container');
+        if ($controls.is(':visible')) {
+            $controls.hide();
+        } else {
+            $controls.show();
+            // Recalculate position immediately to ensure it respects boundaries 
+            refreshPosition();
+        }
     }
+
+    // Initialize with a slight delay to ensure viewport is stable
+    setTimeout(refreshPosition, 100);
+    // Also update on full load to be sure
+    $(window).on('load', refreshPosition);
 });
