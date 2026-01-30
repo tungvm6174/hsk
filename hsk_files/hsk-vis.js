@@ -183,10 +183,10 @@ $(document).ready(function () {
 
     // Function to keep the controls relative to the viewport, respecting the last drag position
     function refreshPosition() {
-        if (isDragging) return;
+        var $controls = $('.controls-container');
+        if (isDragging || !$controls.is(':visible')) return;
 
         var vp = getViewportSize();
-        var $controls = $('.controls-container');
         var rect = $controls[0].getBoundingClientRect();
 
         // Clamp the last known visual position to the new viewport dimensions
@@ -288,6 +288,11 @@ $(document).ready(function () {
     // Toggle controls visibility on Long Press (Mobile)
     var longPressTimer;
     $(document).on('touchstart', function (e) {
+        // Cancel if multitouch (pinch/zoom)
+        if (e.originalEvent.touches.length > 1) {
+            clearTimeout(longPressTimer);
+            return;
+        }
         longPressTimer = setTimeout(function () {
             toggleControls();
         }, 800);
