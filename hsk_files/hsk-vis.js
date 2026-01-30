@@ -1,16 +1,5 @@
 $(document).ready(function () {
-    function drawGrid() {
-        var $table = $('<table class="vis-table"></table>');
-        for (var i = 1; i <= 50; i++) {
-            var $tr = $('<tr class="vis-table-row"></tr>');
-            for (var j = 1; j <= 100; j++) {
-                var $td = $('<td class="vis-table-cell"></td>');
-                $tr.append($td);
-            }
-            $table.append($tr);
-        }
-        $('.vis').append($table);
-    }
+
 
     var uniqueCharacters = [];
 
@@ -96,9 +85,7 @@ $(document).ready(function () {
         localStorage.setItem('hsk-vis-inverted', JSON.stringify(inverted));
     }
 
-    drawGrid();
 
-    populateHSK();
 
     applyInverted();
 
