@@ -110,15 +110,18 @@ $(document).ready(function () {
     $('.simp-trad-toggle').click(function () {
         if ($(this).attr('data-current-type') == 'simplified') {
             $(this).attr('data-current-type', 'traditional');
+            $(this).text('Traditional');
             populateHSK('traditional');
         } else {
             $(this).attr('data-current-type', 'simplified');
+            $(this).text('Simplified');
             populateHSK('simplified');
         }
     })
 
     $('.unique-toggle').click(function () {
         $('.vis').toggleClass('highlight-unique');
+        $(this).toggleClass('active');
     })
 
     $('.font-toggle').click(function () {
@@ -130,23 +133,134 @@ $(document).ready(function () {
         // Cycle through fonts: sans-serif -> kaiti -> ozcaramel -> lingwai -> pinyin -> sans-serif
         if (currentFont == 'sans-serif') {
             $(this).attr('data-current-font', 'kaiti');
-            $(this).text('Toggle Font: Kaiti');
+            $(this).text('Kaiti');
             $('.vis').addClass('kaiti-font');
         } else if (currentFont == 'kaiti') {
             $(this).attr('data-current-font', 'ozcaramel');
-            $(this).text('Toggle Font: OzCaramel');
+            $(this).text('OzCaramel');
             $('.vis').addClass('ozcaramel-font');
         } else if (currentFont == 'ozcaramel') {
             $(this).attr('data-current-font', 'lingwai');
-            $(this).text('Toggle Font: LingWai');
+            $(this).text('LingWai');
             $('.vis').addClass('lingwai-font');
         } else if (currentFont == 'lingwai') {
             $(this).attr('data-current-font', 'pinyin');
-            $(this).text('Toggle Font: Pinyin (FangZheng)');
+            $(this).text('Pinyin');
             $('.vis').addClass('pinyin-font');
         } else {
             $(this).attr('data-current-font', 'sans-serif');
-            $(this).text('Toggle Font: Sans-serif');
+            $(this).text('Sans-serif');
         }
     })
+
+    // Draggable controls logic
+    function constrainToViewport() {
+        var $controls = $('.controls-container');
+        var rect = $controls[0].getBoundingClientRect();
+        var winWidth = window.innerWidth;
+        var winHeight = window.innerHeight;
+        var newLeft = rect.left;
+        var newTop = rect.top;
+        var width = rect.width;
+        var height = rect.height;
+
+        // Constrain horizontally
+        if (newLeft < 0) newLeft = 0;
+        else if (newLeft + width > winWidth) newLeft = winWidth - width;
+
+        // Constrain vertically
+        if (newTop < 0) newTop = 0;
+        else if (newTop + height > winHeight) newTop = winHeight - height;
+
+        $controls.css({
+            left: newLeft + 'px',
+            top: newTop + 'px'
+        });
+    }
+
+    var $controls = $('.controls-container');
+    var isDragging = false;
+    var startX, startY, initialLeft, initialTop;
+
+    function startDrag(clientX, clientY) {
+        isDragging = true;
+        startX = clientX;
+        startY = clientY;
+
+        var rect = $controls[0].getBoundingClientRect();
+        initialLeft = rect.left;
+        initialTop = rect.top;
+
+        $controls.addClass('dragging');
+        $controls.css({
+            'right': 'auto',
+            'left': initialLeft + 'px',
+            'top': initialTop + 'px',
+            'bottom': 'auto'
+        });
+    }
+
+    $controls.on('mousedown touchstart', function (e) {
+        // Only allow dragging via the handle
+        if (!$(e.target).closest('.drag-handle').length) {
+            return;
+        }
+
+        var clientX = e.clientX;
+        var clientY = e.clientY;
+
+        if (e.type === 'touchstart') {
+            clientX = e.originalEvent.touches[0].clientX;
+            clientY = e.originalEvent.touches[0].clientY;
+        }
+
+        startDrag(clientX, clientY);
+
+        // Prevent default to disable text selection etc.
+        e.preventDefault();
+    });
+
+    $(document).on('mousemove touchmove', function (e) {
+        if (!isDragging) return;
+
+        var clientX = e.clientX;
+        var clientY = e.clientY;
+
+        if (e.type === 'touchmove') {
+            clientX = e.originalEvent.touches[0].clientX;
+            clientY = e.originalEvent.touches[0].clientY;
+            e.preventDefault(); // Prevent scrolling while dragging
+        }
+
+        var dx = clientX - startX;
+        var dy = clientY - startY;
+
+        var newLeft = initialLeft + dx;
+        var newTop = initialTop + dy;
+
+        var rect = $controls[0].getBoundingClientRect();
+        var winWidth = window.innerWidth;
+        var winHeight = window.innerHeight;
+
+        // Constrain
+        newLeft = Math.max(0, Math.min(newLeft, winWidth - rect.width));
+        newTop = Math.max(0, Math.min(newTop, winHeight - rect.height));
+
+        $controls.css({
+            left: newLeft + 'px',
+            top: newTop + 'px'
+        });
+    });
+
+    $(document).on('mouseup touchend', function () {
+        if (isDragging) {
+            isDragging = false;
+            $controls.removeClass('dragging');
+            constrainToViewport();
+        }
+    });
+
+    $(window).resize(function () {
+        constrainToViewport();
+    });
 });
