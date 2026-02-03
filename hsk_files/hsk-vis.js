@@ -115,9 +115,9 @@ $(document).ready(function () {
         var currentFont = $(this).attr('data-current-font');
 
         // Remove all font classes
-        $('.vis').removeClass('kaiti-font ozcaramel-font lingwai-font pinyin-font');
+        $('.vis').removeClass('kaiti-font ozcaramel-font lingwai-font pinyin-font zhuyin-font zhuyin-kaiti-font');
 
-        // Cycle through fonts: sans-serif -> kaiti -> ozcaramel -> lingwai -> pinyin -> sans-serif
+        // Cycle through fonts: sans-serif -> kaiti -> ozcaramel -> lingwai -> pinyin -> zhuyin -> zhuyin-kaiti -> sans-serif
         if (currentFont == 'sans-serif') {
             $(this).attr('data-current-font', 'kaiti');
             $(this).text('Kaiti');
@@ -134,6 +134,14 @@ $(document).ready(function () {
             $(this).attr('data-current-font', 'pinyin');
             $(this).text('Pinyin');
             $('.vis').addClass('pinyin-font');
+        } else if (currentFont == 'pinyin') {
+            $(this).attr('data-current-font', 'zhuyin');
+            $(this).text('Zhuyin');
+            $('.vis').addClass('zhuyin-font');
+        } else if (currentFont == 'zhuyin') {
+            $(this).attr('data-current-font', 'zhuyin-kaiti');
+            $(this).text('Zhuyin Kaiti');
+            $('.vis').addClass('zhuyin-kaiti-font');
         } else {
             $(this).attr('data-current-font', 'sans-serif');
             $(this).text('Sans-serif');

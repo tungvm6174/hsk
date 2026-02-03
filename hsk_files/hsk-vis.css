@@ -12,6 +12,21 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'ZhuyinWeb';
+  src: url('./zhuyin.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'ZhuyinKaitiWeb';
+  /* Assuming .ttf based on standard web font usage, please verify filename */
+  src: url('./zhuyin-kaiti.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 body {
   margin: 0;
 }
@@ -49,6 +64,16 @@ body {
 .pinyin-font .vis-table-cell {
   font-family: 'FangZhengPinyinWeb', "FZKTPY01--GB1-0", "FZKTPY02--GB1-0", "FZKTPY03--GB1-0", "FZKTPY04--GB1-0", "FZKTPY05--GB1-0", "FZKTPY06--GB1-0", "FangZhengKaiTiPinYinZiKu", "FZKaiTiPinYinZiKu", "FZKTPY", "方正楷体拼音字库", "Kaiti SC", "Kaiti TC", serif;
   line-height: 1.8;
+}
+
+.zhuyin-font .vis-table-cell {
+  font-family: 'ZhuyinWeb', sans-serif;
+  line-height: 1.2;
+}
+
+.zhuyin-kaiti-font .vis-table-cell {
+  font-family: 'ZhuyinKaitiWeb', "Kaiti SC", "Kaiti TC", serif;
+  line-height: 1.2;
 }
 
 .hsk1 {
