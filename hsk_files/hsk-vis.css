@@ -27,6 +27,13 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'KaitiWeb';
+  src: url('./Kaiti.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 body {
   margin: 0;
 }
@@ -50,7 +57,7 @@ body {
 }
 
 .kaiti-font .vis-table-cell {
-  font-family: "Kaiti SC", "Kaiti TC", "STKaiti", "KaiTi", serif;
+  font-family: 'KaitiWeb', "Kaiti SC", "Kaiti TC", "STKaiti", "KaiTi", serif;
 }
 
 .ozcaramel-font .vis-table-cell {
